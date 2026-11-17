@@ -17,7 +17,8 @@ For the agent that finishes the job. Read `README.md` (short, written for the ha
    - `TOOL_PASSWORD`: the admin password, 8 characters or more. The user chooses it and puts it in the Submit "notes" field.
    - `SESSION_SECRET`: a long random string, 16 characters or more.
    - `GROUPON_API_KEY`: the sandbox key from the Desk ("Your API key"). Never read it, never write it to a file, never print it.
-   - `GROUPON_API_BASE`: `https://desk-production-6adc.up.railway.app/api/sandbox/v1`
+   - `GROUPON_API_BASE`: `https://desk-production-6adc.up.railway.app/api/sandbox/v1`. **Already set** (Production, type Config) by the previous agent in the browser. Check it is still listed.
+   The previous agent also opened the Add form in the Browser pane with the other three names typed and the values empty. It did not enter any password, secret or key (rule: never enter credentials). The user types the three values and clicks Save. If that form is gone, add them again, type Secret, environment Production.
 2. Say "redeploy" (env changes only apply to new deployments). Then you can redeploy with the connector (`create_deployment` with `deploymentId` of the latest deployment) or push any commit.
 3. Say "go" for the first live calls (see below), make the repo public or invite the facilitator, take phone screenshots, export the AI sessions, press Submit before **Thursday 09:00 Desk time**.
 4. The user decided: **no messages to any person** (Greg, Dan, Hana, Priya, Renee, Marcus). The people come online in about 5 hours. Do not draft or send any.
