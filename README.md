@@ -17,6 +17,6 @@ For each sold-out restock task, one engine gives a status (Call first, Call late
 
 ## Not done
 
-- No real live row has gone through the page yet. The sandbox feed was empty when I checked (team time 03:54).
+- No real live row has gone through the page yet. The sandbox feed was empty when I checked (team time 04:03). While it is empty, the page shows the last day in the API history, read only.
 - Cut: the live AI note reader (a stub), reviews and refund texts, list order in routing, automated cap raises, per-rep logins.
 - I started in the evening. The team is offline now, but this is the only time I have to do it. So nothing is agreed with anyone. The £11 a call is not validated.

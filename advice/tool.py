@@ -86,6 +86,7 @@ class Tool:
         self.cfg, self.h, self.marks, self.findings = cfg, history, marks, findings or {}
         self.source = tasks if hasattr(tasks, "load") else StaticSource(tasks)
         self.engine, self.mode, self.example = Engine(cfg, history), cfg["tool_mode"], example
+        self.past_day = None  # set (a date) on a Tool that shows one past day from the history
 
     def _row(self, a):
         t = a.task
@@ -119,6 +120,9 @@ class Tool:
                 if not rep_id or v.get("marked_by") == rep_id]
         reps = [{"rep_id": r["rep_id"], "rep_name": r.get("rep_name") or r["rep_id"]} for r in self.h.reps]
         meta = dict(meta, example_available=self.example is not None)
+        day = self.past_day or getattr(self.example, "past_day", None)
+        if day:  # the page names the day on the button and in the banner
+            meta["past_day"] = day.isoformat()
         if getattr(self.marks, "error", None):
             meta["marks_error"] = self.marks.error
         return {"mode": self.mode, "reps": reps, "rows": rows, "marks": mine, "meta": meta, "auth": False, "example": False}
@@ -128,6 +132,20 @@ class Tool:
 
     def delete_mark(self, merchant_id):
         return self.marks.delete(merchant_id)
+
+
+def past_day_tool(cfg, history):
+    """A read-only Tool for the latest day in the history, or None when the history holds no sold-outs.
+
+    The hosted page shows it while today's list is empty. It reads the history that is already in memory,
+    so it costs no API call, and it has its own marks that nobody can change (the server refuses marks in example mode).
+    """
+    day = history.max_date
+    if day is None:
+        return None
+    tool = Tool(cfg, history, [history.task_of(so) for so in history.sold_outs if so.date == day], MemoryMarks())
+    tool.past_day = day
+    return tool
 
 
 def render_login(error=""):

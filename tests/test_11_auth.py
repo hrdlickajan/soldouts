@@ -15,7 +15,8 @@ from advice import demo
 from advice.api import ApiError, MemoryMarks
 from advice.auth import Auth, ConfigError
 from advice.feed import LiveFeed
-from advice.tool import LiveSource, Tool, make_handler
+from advice.history import History
+from advice.tool import LiveSource, Tool, make_handler, past_day_tool
 from advice.web import build_handler
 from tests.test_10_live import BASE, Script, client, live_row
 
@@ -340,6 +341,52 @@ class HostedAppTest(unittest.TestCase):
             gone = s.call("DELETE", "/api/mark?merchant_id=M10001", headers=h)
             self.assertEqual(gone.status, 200)
             self.assertEqual(s.call("GET", "/api/state?rep=R10", headers=h).json()["rows"][0]["mark"], None)
+
+    @staticmethod
+    def routes_with_history():
+        """The fake API with three past sold-outs: one on 26 Oct, two on 27 Oct (the latest day)."""
+        past = lambda n, merchant, day: {"sold_out_id": f"SO-H{n}", "merchant_id": merchant, "deal_id": f"D{merchant[1:]}-H{n}",
+                                         "sold_out_date": day, "restocked_date": None, "gp_30d_after_gbp": None}
+        rows = [past(1, "M10001", "2026-10-26"), past(2, "M10001", "2026-10-27"), past(3, "M10002", "2026-10-27")]
+        routes = api_routes()
+        routes[("GET", "/soldouts")] = (200, {"data": rows, "next_cursor": None, "total": 3})
+        return routes
+
+    def test_the_last_day_in_the_history_is_the_read_only_example(self):
+        api = Script(self.routes_with_history())
+        with Running(build_handler(ENV, transport=api, sleep=lambda s: None)) as s:
+            _, cookie = s.login()
+            h = {"Cookie": cookie}
+            live = s.call("GET", "/api/state", headers=h).json()
+            self.assertEqual((live["meta"]["example_available"], live["meta"]["past_day"]), (True, "2026-10-27"))
+            ex = s.call("GET", "/api/state?example=1", headers=h).json()
+            self.assertTrue(ex["example"])
+            self.assertEqual(ex["meta"]["past_day"], "2026-10-27")
+            self.assertEqual(sorted(r["merchant_id"] for r in ex["rows"]), ["M10001", "M10002"])   # 27 Oct only, not 26 Oct
+            self.assertEqual({r["sold_out_date"] for r in ex["rows"]}, {"2026-10-27"})
+            self.assertEqual({r["merchant_name"] for r in ex["rows"]}, {"Merchant M10001", "Merchant M10002"})
+            self.assertTrue(all(r["label"] and r["reason"] for r in ex["rows"]))                   # the engine advised each one
+            body = json.dumps({"merchant_id": "M10001", "mark": "no_call", "reason": "r"})
+            put = s.call("PUT", "/api/mark?example=1", body, dict(h, **{"Content-Type": "application/json"}))
+            self.assertEqual(put.status, 400)
+        paths = {p.split("?")[0] for _, p in api.calls}
+        self.assertLessEqual(paths, {"/merchants", "/reps", "/automation/schedules", "/soldouts", "/soldouts/today", "/marks"})
+        self.assertEqual({m for m, _ in api.calls}, {"GET"})                                       # reading the past day writes nothing
+
+    def test_with_no_history_the_example_stays_the_made_up_one(self):
+        api = Script(api_routes())   # /soldouts is empty here
+        with Running(build_handler(ENV, transport=api, sleep=lambda s: None)) as s:
+            _, cookie = s.login()
+            h = {"Cookie": cookie}
+            live = s.call("GET", "/api/state", headers=h).json()
+            ex = s.call("GET", "/api/state?example=1", headers=h).json()
+            self.assertTrue(live["meta"]["example_available"])
+            self.assertNotIn("past_day", live["meta"])
+            self.assertNotIn("past_day", ex["meta"])
+            self.assertEqual(len(ex["rows"]), 28)
+
+    def test_no_past_day_tool_without_history(self):
+        self.assertIsNone(past_day_tool(cfgmod.load(), History({})))
 
     def test_only_marks_are_written_and_never_the_routing_switch(self):
         api = Script(api_routes())

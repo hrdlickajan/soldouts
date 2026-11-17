@@ -19,7 +19,7 @@ from .api import ApiMarks, CachedMarks, Client, MemoryMarks
 from .auth import Auth, ConfigError
 from .feed import LiveFeed
 from .history import History
-from .tool import PAGE, LiveSource, Tool, make_handler
+from .tool import PAGE, LiveSource, Tool, make_handler, past_day_tool
 
 
 class Runtime:
@@ -34,8 +34,10 @@ class Runtime:
             if self._tool is None:
                 ttl = self.cfg["live_cache_seconds"]
                 history = History(self.client.load_tables())
-                h2, t2, f2, s2 = demo.tool_demo()
-                example = Tool(self.cfg, h2, t2, MemoryMarks(s2), f2)
+                example = past_day_tool(self.cfg, history)  # the last real day, else the made-up examples
+                if example is None:
+                    h2, t2, f2, s2 = demo.tool_demo()
+                    example = Tool(self.cfg, h2, t2, MemoryMarks(s2), f2)
                 self._tool = Tool(self.cfg, history, LiveSource(LiveFeed(self.client, ttl=ttl)),
                                   CachedMarks(ApiMarks(self.client), ttl=ttl), example=example)
             return self._tool
