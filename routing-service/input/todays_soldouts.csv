@@ -1,0 +1,29 @@
+task_id,merchant_id,merchant_name,deal_id,category,size_band,sold_out_date,value_30d_gbp,callback_promised,do_not_contact,failed_attempts
+T-0001,M90001,Harbour Nail Bar,D90001-1,Health & Beauty,A,2026-10-26,140.00,0,0,0
+T-0002,M90001,Harbour Nail Bar,D90001-2,Health & Beauty,A,2026-10-24,140.00,0,0,0
+T-0003,M90002,Kestrel Day Spa,D90002-1,Health & Beauty,B,2026-10-25,95.50,1,0,0
+T-0004,M90003,Willow Pilates Studio,D90003-1,Fitness,C,2026-10-23,40.25,0,0,0
+T-0005,M90004,Marlow Escape Rooms,D90004-1,Activities,B,2026-10-26,88.00,0,0,1
+T-0006,M90005,Fern Hair Lounge,D90005-1,Health & Beauty,D,2026-10-22,12.40,0,0,0
+T-0007,M90006,Oak Street Bistro,D90006-1,Food & Drink,A,2026-10-25,160.80,0,1,0
+T-0008,M90007,Copper Kettle Cafe,D90007-1,Food & Drink,C,2026-10-24,35.10,0,0,3
+T-0009,M90008,Quay Brewing Taproom,D90008-1,Food & Drink,B,2026-10-26,70.00,1,0,2
+T-0010,M90009,Sage Wellness Rooms,D12006-1,Health & Beauty,D,2026-10-21,18.75,0,0,0
+T-0011,M90010,Ember Grill House,D90010-1,Food & Drink,A,2026-10-25,120.30,0,0,0
+T-0012,M90010,Ember Grill House,D90010-2,Food & Drink,A,2026-10-25,120.30,0,0,0
+T-0013,M90011,Lantern Yoga,D90011-1,Fitness,C,2026-10-22,30.00,0,0,0
+T-0014,M90012,Pebble Beach Golf,D90012-1,Activities,B,2026-10-23,77.77,0,0,0
+T-0015,M90013,Thistle Tea Rooms,D90013-1,Food & Drink,D,2026-10-24,9.90,0,0,0
+T-0016,M90014,Aurora Hair Studio,D90014-1,Health & Beauty,B,2026-10-26,64.20,0,0,0
+T-0017,M90015,Birch Barber Co,D12863-5,Health & Beauty,C,2026-10-25,28.40,0,0,0
+T-0018,M90016,Summit Climbing,D90016-1,Fitness,A,2026-10-24,150.00,0,0,0
+T-0019,M90017,Foxglove Florist,D90017-1,Gifts,D,2026-10-22,11.20,0,0,0
+T-0020,M90018,Beacon Bowling,D90018-1,Activities,C,2026-10-26,33.30,0,0,0
+T-0021,M90019,Juniper Massage,D90019-1,Health & Beauty,B,2026-10-23,58.60,0,0,2
+T-0022,M90020,Cobble Lane Bakery,D90020-1,Food & Drink,D,2026-10-25,14.00,0,0,0
+T-0023,M90021,Orchard Escape,D90021-1,Activities,A,2026-10-24,132.40,0,0,0
+T-0024,M90022,Tidal Surf School,D90022-1,Activities,B,2026-10-26,81.10,0,0,0
+T-0025,M90023,Velvet Lash Lounge,D90023-1,Health & Beauty,C,2026-10-23,26.50,0,0,0
+T-0026,M90024,Granite Gym,D90024-1,Fitness,B,2026-10-25,72.00,0,0,0
+T-0027,M90025,Maple Dental Spa,D90025-1,Health & Beauty,A,2026-10-22,145.90,0,0,0
+T-0028,M90026,Clover Cocktail Bar,D90026-1,Food & Drink,C,2026-10-26,38.80,0,0,0
