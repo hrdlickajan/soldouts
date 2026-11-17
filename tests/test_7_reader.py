@@ -109,6 +109,18 @@ class ReaderOnSyntheticDataTest(unittest.TestCase):
         self.assertIn("Result since launch", text2)
         self.assertIn("26 October 2026", text2)
 
+    def test_piped_output_is_utf8_whatever_the_platform_default_is(self):
+        import subprocess
+        import sys
+        env = {k: v for k, v in os.environ.items() if k not in ("PYTHONIOENCODING", "PYTHONUTF8")}
+        root = Path(__file__).resolve().parent.parent
+        with tempfile.TemporaryDirectory() as d:
+            demo.write_pack(TABLES, d)
+            p = subprocess.run([sys.executable, "-m", "advice.result_reader", d], capture_output=True, cwd=root, env=env)
+        self.assertEqual(p.returncode, 0, p.stderr.decode(errors="replace"))
+        text = p.stdout.decode("utf-8")  # strict: raises if the pound sign came out in another encoding
+        self.assertIn("£", text)
+
     def test_it_runs_with_the_network_off(self):
         def no_network(*a, **k):
             raise AssertionError("the reader tried to use the network")

@@ -242,7 +242,8 @@ def main(argv=None):
     args = ap.parse_args(argv)
     cfg = cfgmod.load(args.config)
     if hasattr(sys.stdout, "reconfigure"):
-        sys.stdout.reconfigure(errors="replace")  # a console that cannot show the pound sign must not stop the report
+        # UTF-8 when piped or redirected (on Windows the default would be the ANSI code page, which breaks the pound sign).
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     summary = build_summary(History(load_pack(args.folder)), cfg, args.folder, args.launch)
     print(render(summary, cfg))
     if args.json:
