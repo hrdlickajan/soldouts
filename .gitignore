@@ -22,3 +22,7 @@ marks.json
 findings.json
 result.json
 .claude/
+
+# Desk material stays local and read-only. Only the handoff is tracked.
+inputs/*
+!inputs/HANDOFF.md
