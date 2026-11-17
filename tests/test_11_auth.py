@@ -16,7 +16,7 @@ from advice.api import ApiError, MemoryMarks
 from advice.auth import Auth, ConfigError
 from advice.feed import LiveFeed
 from advice.history import History
-from advice.tool import LiveSource, Tool, make_handler, past_day_tool
+from advice.tool import LiveSource, Tool, make_handler, past_day_tool, render_login
 from advice.web import build_handler
 from tests.test_10_live import BASE, Script, client, live_row
 
@@ -279,6 +279,16 @@ class ExampleAndErrorsTest(unittest.TestCase):
             self.assertFalse(state["auth"])
             self.assertEqual(len(state["rows"]), 28)
             self.assertEqual(s.call("GET", "/login").status, 404)
+
+
+class LightOnlyTest(unittest.TestCase):
+    """No dark mode. The theme's dark rules only apply when the page does not say data-theme="light",
+    and the meta tag keeps the browser's own controls (the rep list, scroll bars) light too."""
+
+    def test_both_pages_stay_light_on_a_dark_phone(self):
+        for name, text in (("page", PAGE), ("login", render_login())):
+            self.assertIn('<html lang="en" data-theme="light">', text, name)
+            self.assertIn('<meta name="color-scheme" content="light">', text, name)
 
 
 def api_routes():

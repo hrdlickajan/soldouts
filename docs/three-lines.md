@@ -1,16 +1,16 @@
-# Three lines for Dan (draft, for the Submit panel)
+# For Dan (Submit text)
 
-Plain text. Paste the three lines. The numbers come from `python -m advice.result_reader <data pack folder>`.
+Paste this in the "three lines" box. The numbers come from `python -m advice.result_reader <data pack folder>`.
 
 ```
-Did: built a sold-out advice engine, a phone rep tool (hosted, with a login), a routing change (off by default, one switch for Greg) and an offline result reader. Tests pass on the original routing and the new copy, and the A/A check on history passes.
-Worth: £0 to about £62.9k a year, about £6.8k at the memo's £11 a call, if call share on the top fifth rises 10 points. A scenario, not a forecast. The real number arrives 8 weeks + 30 days after launch: 4 April 2027 if we launch on 8 January.
-Cut: the live AI note reader (stub only), reviews and refund texts, per-rep logins, list order in routing. I talked to the people very little, so nothing is agreed. Nothing is switched on. It waits for Greg's written OK after the 7 January freeze.
+Why use it: the best fifth of sold-outs is listed first, so reps call those first.
+The number: £6.8k a year (range £0 to £62.9k) if connected calls on that fifth rise 10 points. A scenario at the memo's £11 a call, not a forecast. Real number: 4 April 2027 if we launch on 8 January.
+Status: nothing is switched on. It waits for Greg's written OK.
 ```
 
-Notes for the Submit panel (optional fields):
+Other fields:
 
-- Tool link: https://soldout-desk-eight.vercel.app . Login: `admin` and the password you set (write it in the notes field). One-command local run is in the README.
-- Repo: the link, with history (no squash).
-- Change request: `docs/change-request.md`.
-- Screenshots: run the tool, open it at phone width, take screenshots.
+- Tool link: https://soldout-desk-eight.vercel.app
+- Login: `admin` and the password (you write it in the box, not here).
+- Repo: the GitHub link, with history. Public, or invite the facilitator.
+- Change request: attach `docs/change-request.md`. The form keeps it. It is not sent to Greg.
