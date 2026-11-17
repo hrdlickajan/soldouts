@@ -1,0 +1,58 @@
+{
+  "_comment": "One config for the advice engine. 'fitted' and the two cut points are written by: python -m advice.fit <data folder> --write",
+  "share_new_routing": 0.5,
+  "dial_gbp": 6,
+  "top_fifth_cut_gbp": 87.62,
+  "bottom_fifth_cut_gbp": 13.64,
+  "connected_seconds": 120,
+  "window_days": 7,
+  "failed_attempts_limit": 3,
+  "failed_attempts_proxy_window_days": 30,
+  "no_answer_subject": "No answer",
+  "pay": {
+    "salary_gbp": [
+      33000,
+      45000
+    ],
+    "hours_a_year": [
+      1950,
+      1700
+    ],
+    "on_cost_high": 0.2
+  },
+  "realization_low": 0,
+  "planned_minutes_per_task": 12,
+  "mean_logged_minutes": 6.1,
+  "fitted": {
+    "wait_days": {
+      "weekly": 4.94,
+      "fortnightly": 8.38,
+      "monthly": 16.12,
+      "none": 22.33
+    },
+    "profit_per_day": {
+      "A": 5.1,
+      "B": 2.38,
+      "C": 1.26,
+      "D": 0.65
+    },
+    "refund_share": {
+      "A": 0.1,
+      "B": 0.07,
+      "C": 0.062,
+      "D": 0.061
+    }
+  },
+  "tool_mode": "demo",
+  "launch_date": "",
+  "accrual_weeks": 8,
+  "followup_days": 30,
+  "memo_gbp_per_call": 11,
+  "lift_points": 10,
+  "note_reader": {
+    "budget_usd": 5,
+    "usd_per_million_input_tokens": 5,
+    "usd_per_million_output_tokens": 25,
+    "max_requests_per_second": 5
+  }
+}
