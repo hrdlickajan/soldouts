@@ -167,7 +167,11 @@ class GuardedRoutesTest(unittest.TestCase):
     def test_a_changed_cookie_is_refused(self):
         with self.serve() as s:
             _, cookie = s.login()
-            self.assertEqual(s.call("GET", "/api/state", headers={"Cookie": cookie[:-1] + "0"}).status, 401)
+            # Change the last character of the signature. Pick one that differs from it: a fixed "0" left the
+            # cookie unchanged about 1 run in 16, when the signature already ended in "0".
+            changed = cookie[:-1] + ("1" if cookie[-1] == "0" else "0")
+            self.assertNotEqual(changed, cookie)
+            self.assertEqual(s.call("GET", "/api/state", headers={"Cookie": changed}).status, 401)
 
     def test_logout_ends_the_session_in_the_browser(self):
         with self.serve() as s:

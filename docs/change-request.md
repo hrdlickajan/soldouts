@@ -38,7 +38,7 @@ The result reader prints these reads from CSV files. The first 30-day GP read co
 
 ## Process and what I ask
 
-1. Diff to Hana first: `diff -u inputs/routing-original/routing/plan.py routing-service/routing/plan.py`.
+1. Diff to Hana first. In the repo: `git diff 5149ce5 HEAD -- routing-service/routing` (5149ce5 is the 2.15.0 baseline commit). Against the Desk download: `diff -ru <2.15.0 folder>/routing routing-service/routing`.
 2. Wednesday 15:00 change review. Then Merchant Ops deploys.
 3. **Ask:** deploy 2.16.0 with the switch **off** before the freeze. Switch on after 7 January, only with your written OK in chat. Nobody flips it before that.
 
