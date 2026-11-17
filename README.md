@@ -15,7 +15,7 @@ Python 3.10 or newer, no packages. Tests run offline. Tests that need the data p
 ## The hand-in, item by item
 
 - **Three lines for Dan:** `docs/three-lines.md`. What I did, what it is worth (a scenario range of £0 to about £62.9k a year, real number on 4 April 2027 if we launch on 8 January), and what I cut.
-- **Tool link:** none yet. The Vercel files are in the repo (`api/`, `vercel.json`, one "admin" login, any rep in a dropdown) but I did not deploy them. Use the one command above.
+- **Tool link:** https://soldout-desk-eight.vercel.app (Vercel free tier). One `admin` login, the password is in the Submit notes field. After signing in you pick any rep in a dropdown. The first visit after a quiet period takes about 8 seconds. The one command above also works.
 - **Repo link:** this repo, history kept, no key in it.
 - **Zip:** not needed, the repo is enough.
 - **AI sessions:** exported in the Submit panel. Claude Code wrote the code. I checked it with tests that were written first, and with numbers rebuilt from the data pack.
@@ -31,7 +31,7 @@ Python 3.10 or newer, no packages. Tests run offline. Tests that need the data p
 
 ## What it cannot do yet
 
-- Today's sandbox feed was empty when I checked, so the live path is tested only against a fake API. Live rows have no callback flag and no failed-attempts count, so the tool says "unknown".
+- Today's sandbox feed was still empty when I checked (team time 03:46), so no real live row has gone through the page yet. The history and the rep list do load from the sandbox. Live rows have no callback flag and no failed-attempts count, so the tool says "unknown".
 - The data pack ends on 27 October. History loaded from the API is the same data.
 - The test can show only that hiding these tasks does little harm.
 
@@ -42,7 +42,6 @@ Python 3.10 or newer, no packages. Tests run offline. Tests that need the data p
 - **List order and priors in routing.** A smaller change is easier for Greg to say yes to.
 - **Automated cap raises.** Greg said not before January.
 - **Per-rep logins.** One admin login is enough for now.
-- **Deploying the tool.** It needs the sandbox key set on the host, and I would not rush that.
 
 ## People
 
