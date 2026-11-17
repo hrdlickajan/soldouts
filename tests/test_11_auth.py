@@ -210,6 +210,9 @@ class GuardedRoutesTest(unittest.TestCase):
             self.assertIn("rows", s.call("GET", "/api/index?__p=api/state", headers=h).json())
             self.assertEqual(s.call("GET", "/api/index?__p=login").status, 200)
             self.assertEqual(s.call("GET", "/api/index?__p=api/state").status, 401)  # still guarded
+            # Vercel may drop an empty __p. The function's own address then means the home page.
+            self.assertIn("viewport", s.call("GET", "/api/index", headers=h).body)
+            self.assertEqual(s.call("GET", "/api/index").location, "/login")
 
     def test_pages_are_not_kept_by_the_phone_or_a_proxy(self):
         with self.serve() as s:

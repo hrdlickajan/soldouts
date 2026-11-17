@@ -171,7 +171,10 @@ def make_handler(tool, page, auth=None, login_page=None):
             """(path, query). On Vercel a rewrite sends every request to one function and puts the real path in __p."""
             u = urlparse(self.path)
             q = parse_qs(u.query, keep_blank_values=True)
-            path = "/" + q.pop("__p")[0].lstrip("/") if "__p" in q else u.path
+            if "__p" in q:
+                path = "/" + q.pop("__p")[0].lstrip("/")
+            else:  # the function's own address is the home page (Vercel may drop an empty __p)
+                path = "/" if u.path in ("/api", "/api/index") else u.path
             return path, q
 
         def _body(self):
