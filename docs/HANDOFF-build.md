@@ -8,7 +8,7 @@ All ten build steps in `docs/spec.md` are done, with tests first. Two parts are 
 
 | Suite | How to run | Result |
 |---|---|---|
-| Root tests (adapters, fit, engine, groups, writer, reader, tool, note reader) | `python -m unittest discover -s tests -t .` | 106 pass with the data pack. 96 pass and 10 skip without it. |
+| Root tests (adapters, fit, engine, groups, writer, reader, tool, note reader) | `python -m unittest discover -s tests -t .` | 107 pass with the data pack. 97 pass and 10 skip without it. |
 | Routing copy (2.16.0) | `cd routing-service && python -m unittest discover -s tests` | 29 pass (11 original, 10 parity, 8 wiring). |
 | Original routing (2.15.0) | `cd inputs/routing-original && python -m unittest discover -s tests` | 11 pass. |
 | Parity suite on the original | `cd routing-service && ROUTING_UNDER_TEST=<original folder> python -m unittest tests.test_parity` | 10 pass, 8 wiring tests skip. |

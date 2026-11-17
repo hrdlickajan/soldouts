@@ -57,7 +57,7 @@ python -m unittest discover -s tests -t .                      # advice engine, 
 cd routing-service && python -m unittest discover -s tests     # routing: the 11 original tests, parity and wiring
 ```
 
-All tests run offline. No test uses the network or the sandbox key. Tests that need the real data pack read the folder in `SOLDOUTS_DATA_PACK` (default `inputs/data-pack`) and skip when it is missing. Without the pack: 96 tests run and 10 skip. With the pack: 106 run. The routing service has 29 tests.
+All tests run offline. No test uses the network or the sandbox key. Tests that need the real data pack read the folder in `SOLDOUTS_DATA_PACK` (default `inputs/data-pack`) and skip when it is missing. Without the pack: 97 tests run and 10 skip. With the pack: 107 run. The routing service has 29 tests.
 
 **Both solutions.** The routing parity suite (`routing-service/tests/test_parity.py`) runs the service as a subprocess, so it can test the original and the new copy:
 
