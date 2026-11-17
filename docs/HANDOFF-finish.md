@@ -31,13 +31,13 @@ For the agent that finishes the job. Read `README.md` (short, written for the ha
 - The first `/api/state` after sign-in took about **8.3 s** (a cold start that loads the history from the API). Later calls took under 1 s. Function: Python 3.12, region fra1. `maxDuration: 60` was accepted at build.
 - The rep dropdown listed all 24 real reps (R01 to R24), so the history tables loaded from the API. Example tasks load and are read only.
 - The feed was **empty**: "0 tasks, team time 03:46". The page shows the empty state and the "Show example tasks" button, as designed.
+- **Go 3 done** (team time 03:48): `PUT /api/mark` with merchant `M10001`, code `test`, as `R10` gave 200 and the sandbox's own `marked_at`. The mark showed in `/api/state`. `DELETE` gave `removed: true` and the list was empty again. No mark was left behind. The test ran from the signed-in page with `fetch`, because an empty feed has no cards to mark.
 - Vercel adds `path=...` to the query on every rewrite. The handler ignores it. `get_runtime_logs` shows each request with path and status (Hobby keeps 1 hour). Use it for timing.
 
 ## Still unverified
 
 1. A real live row through the page. Check again later: the team clock advances and the feed fills during the day.
-2. Marks on the live app (Go 3). With an empty feed there are no cards to mark, so test from the signed-in page with `fetch`: `PUT /api/mark` with `{"merchant_id":"M10001","mark":"test","reason":"Go 3 test","marked_by":"R10"}`, then `GET /api/state` to see it, then `DELETE /api/mark?merchant_id=M10001`. Needs the user's go. Remove the mark even if a step fails.
-3. Dark mode, and real phone screenshots.
+2. Dark mode, and real phone screenshots.
 
 ## Facts about the sandbox (from Go 1, 2026-11-11 01:36 team time)
 
@@ -47,7 +47,7 @@ For the agent that finishes the job. Read `README.md` (short, written for the ha
 
 ## Left to do, in order
 
-1. Go 3 (needs the user's go). Then look at the feed again for real rows.
+1. Look at the feed again for real rows (the team clock advances and the list fills). If rows appear, check the cards and the £ range once.
 2. The README and `docs/three-lines.md` already name the link `https://soldout-desk-eight.vercel.app`. Re-read both once after the checks and keep them true.
 3. Any change: tests first, `git -c http.proxy= push origin main`, wait for READY, re-check the link. A push gives the next visitor a cold start of about 8 s.
 4. Remind the user: repo public or invite, screenshots, AI session export, Submit before Thursday 09:00 Desk time.
