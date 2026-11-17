@@ -1,0 +1,24 @@
+# Secrets. Never commit the sandbox key.
+.env
+.env.*
+*.key
+*key*.txt
+secrets/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# OS and editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Local runtime files
+marks.json
+findings.json
+result.json
+.claude/
