@@ -1,7 +1,7 @@
 """Sold-out suppression list: deals or merchants whose sold-outs should not become rep tasks.
 
 Agreed shape (Ops, October): one row per deal or merchant, read at start of run, only
-when `suppress_soldout_tasks` is on in config. plan.py does not use it yet.
+when `suppress_soldout_tasks` is on in config. plan.py uses it from 2.16.0 (deal rows only).
 """
 import csv
 from pathlib import Path

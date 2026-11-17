@@ -1,0 +1,18 @@
+T-0003 Kestrel Day Spa callback 2.87
+T-0009 Quay Brewing Taproom callback 2.1
+T-0018 Summit Climbing restock 4.5
+T-0027 Maple Dental Spa restock 4.38
+T-0001 Harbour Nail Bar restock 4.2
+T-0002 Harbour Nail Bar restock 4.2
+T-0023 Orchard Escape restock 3.97
+T-0011 Ember Grill House restock 3.61
+T-0012 Ember Grill House restock 3.61
+T-0005 Marlow Escape Rooms restock 2.64
+T-0024 Tidal Surf School restock 2.43
+T-0014 Pebble Beach Golf restock 2.33
+T-0026 Granite Gym restock 2.16
+T-0016 Aurora Hair Studio restock 1.93
+T-0021 Juniper Massage restock 1.76
+T-0004 Willow Pilates Studio restock 1.21
+T-0028 Clover Cocktail Bar restock 1.16
+carried over: 7

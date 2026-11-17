@@ -32,18 +32,31 @@ Notes for anyone changing things:
 - Value per task comes from the input file; routing does not compute it.
 - The input file's column order matters to the importer, so add columns at the end.
 
-## Sold-out suppression (not wired yet)
+## Sold-out suppression (wired in 2.16.0, off by default)
 
-Agreed in October so reps stop getting tasks that don't need them. Only the plumbing exists:
+Agreed in October so reps stop getting tasks that don't need them.
 
-- `suppress_soldout_tasks` in `config/routing.json`. Default `false`. This is the one switch.
-- `input/suppressions.csv`, read by `routing/suppressions.py` (`load_suppressions()`). A row needs a `deal_id`, or a `merchant_id` for the whole merchant.
-- `plan.py` doesn't use either yet. With the switch off, output must stay exactly as it is today.
+- `suppress_soldout_tasks` in `config/routing.json`. Default `false`. This is the one switch. Only JSON `true` turns it on. `env_overrides.json` wins over `routing.json`.
+- `input/suppressions.csv`, read by `routing/suppressions.py`. Ships empty.
+- **Switch off:** the file is not read. Output is identical to 2.15.0 (tests: `tests/test_parity.py`, golden file made by the 2.15.0 code).
+- **Switch on:** `plan.py` drops every task whose `deal_id` is in the file.
+  - Only deal rows count. A row with only a `merchant_id` is ignored, because it would drop every deal of that merchant.
+  - A promised callback is never dropped. Do-not-contact is still dropped.
+  - `suppressed_deal_ids` (disputes) is separate and unchanged.
+  - A missing file suppresses nothing. A malformed row stops the run. Rolling back means switching it off, or emptying the file.
+- The advice engine in `../advice` writes the file (`python -m advice.suppress`). Only auto-top-up tasks of test group B are listed.
 
-Whoever picks it up: decide what goes in the file and why, wire it into `plan.py` behind the switch, add tests, and remember `env_overrides.json` wins over `routing.json`. Rolling back means switching it off, nothing else.
+Nobody switches it on before Greg's written OK in chat. Release 1 changes task creation only. List order, priors and input columns stay as today.
+
+## Tests
+
+```
+python -m unittest discover -s tests                            # this copy: 11 original tests + parity + wiring
+ROUTING_UNDER_TEST=<path to 2.15.0> python -m unittest tests.test_parity   # the same parity suite on the original
+```
 
 ## Ops
 
 - Changes go to Wednesday change review, then Merchant Ops deploys. Config changes count as changes.
 - Peak change freeze: nothing touches routing or its config until 7 January.
-- Version: 2.15.0 (2.15.0 added the suppression switch and file, unused)
+- Version: 2.16.0. 2.15.0 added the suppression switch and file, unused. 2.16.0 wires them into `plan.py`, behind the switch (off).

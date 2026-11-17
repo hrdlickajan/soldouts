@@ -4,6 +4,8 @@ import json
 import sys
 from pathlib import Path
 
+from routing.suppressions import load_suppressions
+
 ROOT = Path(__file__).resolve().parent.parent
 
 # Used when a key is missing from config/routing.json.
@@ -41,10 +43,23 @@ def expected_gp(row, priors):
     return (p["called"] - p["left_alone"]) * float(row["value_30d_gbp"])
 
 
-def is_active(row, config):
+def suppressed_deals(config):
+    """Deal ids in the sold-out suppression file. Empty unless the switch is on (only JSON true counts).
+
+    Only deal-level rows count. A row with just a merchant_id would drop every deal of that merchant,
+    so it is ignored. The file is not read at all while the switch is off.
+    """
+    if config.get("suppress_soldout_tasks") is not True:
+        return set()
+    return {r["deal_id"] for r in load_suppressions(ROOT / config["suppression_file"]) if r["deal_id"]}
+
+
+def is_active(row, config, suppressed=frozenset()):
     if row["do_not_contact"] == "1":
         return False
     if row["deal_id"] in set(config.get("suppressed_deal_ids", [])):
+        return False
+    if row["deal_id"] in suppressed and row["callback_promised"] != "1":  # a promised callback survives
         return False
     return True
 
@@ -53,7 +68,8 @@ def build_plan(rows, priors=None, config=None):
     """Return (today's list, carried over). Each item is a dict with task and rank details."""
     priors = priors or load_priors()
     config = config or load_config()
-    active = [r for r in rows if is_active(r, config)]
+    suppressed = suppressed_deals(config)
+    active = [r for r in rows if is_active(r, config, suppressed)]
     promised = [r for r in active if r["callback_promised"] == "1"]
     rest = [r for r in active
             if r["callback_promised"] != "1" and int(r["failed_attempts"]) < config["max_failed_attempts"]]
