@@ -372,3 +372,35 @@ class HostedAppTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class VercelEntryTest(unittest.TestCase):
+    """api/index.py is what Vercel builds. Vercel finds the handler by reading the file, so the class must be written out."""
+    ENTRY = Path(__file__).resolve().parent.parent / "api" / "index.py"
+
+    def test_the_handler_class_is_written_out_where_vercel_can_see_it(self):
+        text = self.ENTRY.read_text(encoding="utf-8")
+        self.assertRegex(text, r"(?m)^class handler\(BaseHTTPRequestHandler\):")
+
+    def _load(self, env):
+        import importlib.util
+        import os
+        from unittest import mock
+        spec = importlib.util.spec_from_file_location("vercel_entry_under_test", self.ENTRY)
+        module = importlib.util.module_from_spec(spec)
+        with mock.patch.dict(os.environ, env, clear=True):
+            spec.loader.exec_module(module)
+        return module.handler
+
+    def test_without_settings_the_entry_answers_503_everywhere(self):
+        with Running(self._load({})) as s:
+            for path in ("/", "/login", "/api/state"):
+                self.assertEqual(s.call("GET", path).status, 503, path)
+
+    def test_with_settings_the_entry_serves_the_login_and_guards_the_rest(self):
+        with Running(self._load(dict(ENV))) as s:
+            self.assertEqual(s.call("GET", "/login").status, 200)
+            self.assertEqual(s.call("GET", "/").status, 303)
+            self.assertEqual(s.call("GET", "/api/state").status, 401)
+            r, cookie = s.login()
+            self.assertEqual(r.status, 303)

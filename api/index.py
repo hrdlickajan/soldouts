@@ -5,9 +5,20 @@ Nothing is read from a file. A missing or weak TOOL_PASSWORD or SESSION_SECRET m
 """
 import os
 import sys
+from http.server import BaseHTTPRequestHandler
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from advice.web import build_handler  # noqa: E402
 
-handler = build_handler(os.environ)
+_impl = build_handler(os.environ)
+
+
+class handler(BaseHTTPRequestHandler):
+    """Vercel finds this class by reading this file, so it is written out here.
+    It takes every method from the real handler that advice/web.py builds for this environment."""
+
+
+for _name, _value in vars(_impl).items():
+    if not _name.startswith("__"):
+        setattr(handler, _name, _value)
