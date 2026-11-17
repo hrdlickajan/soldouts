@@ -43,6 +43,11 @@ class Task:
     callback_promised: bool = field(default=None, compare=False)
     failed_attempts: int = field(default=None, compare=False)
     value_30d_gbp: float = field(default=None, compare=False)
+    # What the live feed adds for the card. None of it takes part in equality.
+    deal_name: str = field(default="", compare=False)
+    city: str = field(default="", compare=False)
+    rep_id: str = field(default="", compare=False)
+    team_time: str = field(default="", compare=False)  # the team clock at the sold-out, for example "09:14"
 
     @property
     def key(self):
@@ -63,14 +68,19 @@ def to_task(row, merchants=None):
     return Task(
         merchant_id=r["merchant_id"],
         deal_id=r["deal_id"],
-        sold_out_date=date.fromisoformat(r["sold_out_date"][:10]),
+        # History and routing rows carry sold_out_date. The live feed carries only sold_out_at (a timestamp).
+        sold_out_date=date.fromisoformat((r.get("sold_out_date") or r["sold_out_at"])[:10]),
         size_band=pick("size_band"),
         do_not_contact=bool(flag(pick("do_not_contact"))),
         merchant_name=pick("merchant_name"),
-        task_id=r.get("task_id") or r.get("sold_out_id", ""),
+        task_id=r.get("task_id") or r.get("restock_task_id") or r.get("sold_out_id", ""),
         callback_promised=flag(r.get("callback_promised", "")),
         failed_attempts=int(failed) if failed else None,
         value_30d_gbp=float(value) if value else None,
+        deal_name=r.get("deal_name", ""),
+        city=pick("city"),
+        rep_id=pick("rep_id"),
+        team_time=r.get("team_time", ""),
     )
 
 

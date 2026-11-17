@@ -1,0 +1,12 @@
+# Only api/, advice/ and the demo tasks file go to the host. No data, no tests, no Desk material, no keys.
+inputs
+tests
+docs
+.claude
+marks.json
+findings.json
+result.json
+routing-service/routing
+routing-service/tests
+routing-service/config
+routing-service/priors.json

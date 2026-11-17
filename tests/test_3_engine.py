@@ -80,7 +80,7 @@ class StatusTest(unittest.TestCase):
 
     def test_labels_and_groups(self):
         self.assertEqual(STATUSES["high_value"][:2], ("call", "Call first"))
-        self.assertEqual(STATUSES["worth_a_call"][:2], ("call", "Normal"))
+        self.assertEqual(STATUSES["worth_a_call"][:2], ("call", "Call later"))
         self.assertEqual(STATUSES["auto_top_up_soon"][:2], ("skip", "Skip"))
         self.assertEqual(STATUSES["rep_marked_other"][:2], ("other", "Other"))
 

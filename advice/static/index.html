@@ -4,57 +4,54 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sold-outs today</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
 <style>
-  :root { --bg:#f6f7f9; --card:#fff; --text:#1b1f24; --muted:#5b6570; --line:#dde1e6; --call:#0a7d3b; --skip:#8a5a00; --other:#4a3f9e; --btn:#1b5fd1; --btn-text:#fff; }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#14171a; --card:#1e2327; --text:#e8ebee; --muted:#9aa5b0; --line:#323a42; --call:#5fd38a; --skip:#f0b84f; --other:#a99bff; --btn:#5b94ff; --btn-text:#0b1220; } }
-  :root[data-theme="dark"] { --bg:#14171a; --card:#1e2327; --text:#e8ebee; --muted:#9aa5b0; --line:#323a42; --call:#5fd38a; --skip:#f0b84f; --other:#a99bff; --btn:#5b94ff; --btn-text:#0b1220; }
-  * { box-sizing: border-box; }
+  /* Only what the theme does not give. All colours, type and shape come from theme.css. */
   [hidden] { display: none !important; }
-  html, body { margin: 0; background: var(--bg); color: var(--text); }
-  body { font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-  main { max-width: 40rem; margin: 0 auto; padding: 12px 16px 48px; }
-  h1 { font-size: 1.25rem; margin: 8px 0; }
-  h2 { font-size: 1rem; margin: 24px 0 8px; }
-  .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-  select, input, button { font: inherit; min-height: 44px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--text); padding: 6px 10px; max-width: 100%; }
-  button { background: var(--btn); color: var(--btn-text); border: 0; padding: 6px 14px; cursor: pointer; }
-  button.ghost { background: transparent; color: var(--btn); border: 1px solid var(--btn); }
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 12px; }
-  .chip { font-size: .85rem; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--muted); }
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin: 10px 0; overflow-wrap: anywhere; }
-  .top { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
-  .name { font-weight: 650; }
-  .meta { color: var(--muted); font-size: .85rem; }
-  .badge { flex: none; font-size: .8rem; font-weight: 650; padding: 2px 10px; border-radius: 999px; border: 1px solid currentColor; }
-  .call { color: var(--call); } .skip { color: var(--skip); } .other { color: var(--other); }
-  .reason { margin: 8px 0 4px; }
-  .money { font-weight: 650; }
-  .tags { color: var(--muted); font-size: .8rem; }
-  blockquote { margin: 8px 0; padding: 4px 10px; border-left: 3px solid var(--line); color: var(--muted); font-style: italic; }
-  .mark { margin: 8px 0; padding: 8px; border-radius: 8px; border: 1px dashed var(--line); font-size: .9rem; }
-  .form { display: grid; gap: 8px; margin-top: 8px; }
-  .form input { width: 100%; }
-  .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
-  #msg { color: var(--skip); min-height: 1.4em; }
-  footer { color: var(--muted); font-size: .8rem; margin-top: 24px; }
+  .card { overflow-wrap: anywhere; }
+  .card p { margin: 0; }
+  h1 + p { margin-top: var(--space-1); }
+  button.chip { border: 0; cursor: pointer; font-family: inherit; min-height: var(--tap-min); padding: 2px 14px; color: var(--color-text); }
+  button.chip[aria-pressed="true"] { background: var(--color-primary) !important; color: var(--color-on-primary) !important; }
+  .btn--small { min-height: var(--tap-min); padding: 6px 16px; font-size: var(--text-sm); }
+  form.inline { display: inline; margin: 0; }
 </style>
 </head>
 <body>
-<main>
-  <h1>Sold-outs today</h1>
-  <div class="bar">
-    <select id="rep" aria-label="Your name"></select>
-    <span class="chip" id="mode"></span>
+<header class="app-header">
+  <span class="app-header__title">Sold-out desk</span>
+  <span class="badge badge--info" id="mode"></span>
+</header>
+<main class="container stack">
+  <div>
+    <h1>Today's sold-outs</h1>
+    <p class="muted small" id="count"></p>
   </div>
-  <div class="chips" id="chips"></div>
+  <div class="row row--between" id="account" hidden>
+    <span class="small" id="who"></span>
+    <form class="inline" method="post" action="/logout"><button class="btn btn--secondary btn--small" type="submit">Sign out</button></form>
+  </div>
+  <label class="field" id="repbox">
+    <span class="field__label">View tasks as</span>
+    <select class="select" id="rep"></select>
+  </label>
+  <div class="row">
+    <button class="btn btn--secondary btn--small" id="refresh" type="button">Refresh</button>
+    <button class="btn btn--secondary btn--small" id="exampleBtn" type="button" hidden></button>
+  </div>
   <div id="msg" role="status"></div>
-  <div id="list"></div>
+  <div class="stack" id="banners"></div>
+  <div class="row" id="chips"></div>
+  <div class="stack" id="list" aria-live="polite"></div>
   <h2>My marks</h2>
-  <div id="marks"></div>
-  <footer>
+  <div class="stack" id="marks"></div>
+  <p class="card__meta" id="footer">
     The £ figure is the most a call could win back before the next top-up, minus rep time at an assumed pay rate (£17 to £32 an hour).
     It says "up to" because a call may change nothing. Code works out the sums. AI does not. Tags: computed (from data) or assumed (an assumption).
-  </footer>
+  </p>
 </main>
 <script>
 const $ = (s) => document.querySelector(s);
@@ -65,77 +62,164 @@ function el(tag, props, ...kids) {
     else if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
     else e.setAttribute(k, v);
   }
-  for (const kid of kids) if (kid !== null && kid !== undefined) e.append(kid);
+  for (const kid of kids) if (kid !== null && kid !== undefined && kid !== false) e.append(kid);
   return e;
 }
 function remembered(set) {
   try { if (set === undefined) return localStorage.getItem("rep") || ""; localStorage.setItem("rep", set); } catch (e) { return ""; }
   return set;
 }
-let state = null;
-let rep = remembered();
-const say = (t) => { $("#msg").textContent = t || ""; };
-const money = (x) => "£" + Math.round(x).toLocaleString("en-GB");
+// One colour for each label, from the theme: Call first = green, Call later = blue, Other = purple, Skip = grey.
+const TAG = { "Call first": "raise", "Call later": "relaunch", "Other": "redirect", "Skip": "leave", "Task": "leave" };
+const LABELS = ["Call first", "Call later", "Skip", "Other", "Task"];
+const STALE_AFTER_MS = 60000;
 
-async function load() {
-  const r = await fetch("/api/state" + (rep ? "?rep=" + encodeURIComponent(rep) : ""));
-  state = await r.json();
+let state = null;        // the last good answer from /api/state
+let rep = remembered();  // the rep picked in the list ("" = everyone). Marks are saved under this rep.
+let example = false;     // example tasks (made-up, read only)
+let filter = "All";
+let loading = false;
+let loadedAt = 0;
+
+const note = (kind, ...kids) => el("div", { class: "notice notice--" + kind }, ...kids);
+function say(text, kind) { const m = $("#msg"); m.textContent = text || ""; m.className = text ? "notice notice--" + (kind || "warn") : ""; }
+const money = (x) => "£" + Math.round(x).toLocaleString("en-GB");
+const clock = (iso) => { const d = new Date(iso); return isNaN(d) ? "" : d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }); };
+const day = (iso) => { const d = new Date(iso); return isNaN(d) ? "" : d.toLocaleDateString("en-GB", { day: "numeric", month: "short" }); };
+
+async function call(method, url, body) {
+  const r = await fetch(url, { method, headers: body ? { "Content-Type": "application/json" } : {}, body: body ? JSON.stringify(body) : undefined });
+  if (r.status === 401) { location.href = "/login"; throw new Error("signed out"); }
+  let json = {};
+  try { json = await r.json(); } catch (e) { json = { error: "The server sent something unreadable." }; }
+  return { ok: r.ok, status: r.status, json };
+}
+
+async function load(force) {
+  if (loading) return;
+  loading = true;
+  $("#refresh").disabled = true;
+  if (!state) $("#list").replaceChildren(note("info", "Loading today's sold-outs. The first visit of the day can take up to ten seconds."));
+  try {
+    const q = new URLSearchParams();
+    if (example) q.set("example", "1");
+    else { if (rep) q.set("rep", rep); if (force) q.set("refresh", "1"); }
+    const r = await call("GET", "/api/state?" + q);
+    if (r.ok) { state = r.json; loadedAt = Date.now(); say(""); }
+    else if (state) say((r.json.error || "Could not refresh.") + " Showing the last list.");
+    else { showFailure(r.json.error || "Could not load the tasks."); return; }
+  } catch (e) {
+    if (e.message === "signed out") return;
+    if (state) say("No connection. Showing the last list.");
+    else { showFailure("No connection. Check your signal and try again."); return; }
+  } finally {
+    loading = false;
+    $("#refresh").disabled = false;
+  }
   render();
 }
+function showFailure(text) {
+  $("#list").replaceChildren(note("danger", text, " ", el("button", { class: "btn btn--small", type: "button", onclick: () => load(true) }, "Try again")));
+}
 async function send(method, url, body) {
-  const r = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
-  const j = await r.json();
-  if (!r.ok) { say(j.error || "Something went wrong"); return false; }
-  say(""); await load(); return true;
+  const r = await call(method, url + (example ? (url.includes("?") ? "&" : "?") + "example=1" : ""), body);
+  if (!r.ok) { say(r.json.error || "Something went wrong", "danger"); return false; }
+  say(""); await load(false); return true;
+}
+
+function markNote(m) {
+  const when = m.marked_at ? ", " + day(m.marked_at) : "";
+  return "Mark “" + m.mark + "”: " + m.reason + (m.marked_by ? " (" + m.marked_by + when + ")" : "");
 }
 
 function card(row) {
+  const what = [row.deal_name || row.deal_id, row.city].filter(Boolean).join(" · ");
+  const when = "sold out " + (row.sold_out_time ? row.sold_out_time + " on " : "") + row.sold_out_date;
   const kids = [
-    el("div", { class: "top" },
-      el("div", {}, el("div", { class: "name" }, row.merchant_name || row.merchant_id),
-         el("div", { class: "meta" }, row.deal_id + " · sold out " + row.sold_out_date + (row.group ? " · group " + row.group : ""))),
-      el("span", { class: "badge " + row.kind }, row.label)),
-    el("div", { class: "reason" }, row.reason),
+    el("div", { class: "row row--between" },
+      el("div", {}, el("div", { class: "card__title" }, row.merchant_name || row.merchant_id),
+         el("div", { class: "card__meta" }, what), el("div", { class: "card__meta" }, row.deal_id + " · " + when)),
+      row.group ? el("span", { class: "badge badge--info" }, "Group " + row.group) : null),
+    el("div", { class: "row" }, el("span", { class: "action-tag action-tag--" + (TAG[row.label] || "leave") }, row.label)),
+    el("p", {}, row.reason),
   ];
   if (row.gbp_high !== null && row.gbp_high !== undefined && row.status !== "do_not_contact") {
-    kids.push(el("div", { class: "money" }, row.gbp_low > 0 ? money(row.gbp_low) + " to " + money(row.gbp_high) : "Up to " + money(row.gbp_high)));
-    kids.push(el("div", { class: "tags" }, Object.entries(row.tags).map(([k, v]) => k.replace("_", " ") + ": " + v).join(" · ")));
+    kids.push(el("div", {}, el("span", { class: "price-now" }, row.gbp_low > 0 ? money(row.gbp_low) + " to " + money(row.gbp_high) : "Up to " + money(row.gbp_high))));
+    kids.push(el("div", { class: "card__meta" }, Object.entries(row.tags).map(([k, v]) => k.replace("_", " ") + ": " + v).join(" · ")));
   }
-  if (row.quote) kids.push(el("blockquote", {}, "“" + row.quote + "”"));
-  if (row.mark) {
-    kids.push(el("div", { class: "mark" }, "Mark “" + row.mark.mark + "”: " + row.mark.reason + (row.mark.marked_by ? " (" + row.mark.marked_by + ")" : "")));
-  }
-  const form = el("div", { class: "form", hidden: "" },
-    el("input", { id: "c-" + row.merchant_id, placeholder: "Short code, e.g. no_call", maxlength: "64", list: "codes" }),
-    el("input", { id: "r-" + row.merchant_id, placeholder: "Why, in a sentence" }),
-    el("div", { class: "row" },
-      el("button", { onclick: async () => {
-        if (!rep) { say("Pick your name first."); return; }
-        await send("PUT", "/api/mark", { merchant_id: row.merchant_id, mark: $("#c-" + row.merchant_id).value.trim(), reason: $("#r-" + row.merchant_id).value.trim(), marked_by: rep });
-      } }, "Save mark"),
-      el("button", { class: "ghost", onclick: () => form.toggleAttribute("hidden", true) }, "Cancel")));
-  kids.push(el("div", { class: "row" }, el("button", { class: "ghost", onclick: () => form.toggleAttribute("hidden") }, row.mark ? "Change mark" : "Mark this merchant")), form);
-  return el("div", { class: "card" }, ...kids);
+  if (row.quote) kids.push(el("blockquote", { class: "quote" }, "“" + row.quote + "”"));
+  if (row.mark) kids.push(el("div", { class: "notice notice--info" }, markNote(row.mark)));
+  if (example) return el("article", { class: "card stack" }, ...kids);
+  const form = el("div", { class: "stack", hidden: "" },
+    el("label", { class: "field" }, el("span", { class: "field__label" }, "Short code"),
+      el("input", { class: "input", id: "c-" + row.merchant_id, placeholder: "e.g. no_call", maxlength: "64", list: "codes" })),
+    el("label", { class: "field" }, el("span", { class: "field__label" }, "Why, in a sentence"),
+      el("input", { class: "input", id: "r-" + row.merchant_id })),
+    el("button", { class: "btn btn--block", type: "button", onclick: async (ev) => {
+      if (!rep) { say("Pick a rep in the list first."); return; }
+      ev.target.disabled = true;
+      const ok = await send("PUT", "/api/mark", { merchant_id: row.merchant_id, mark: $("#c-" + row.merchant_id).value.trim(), reason: $("#r-" + row.merchant_id).value.trim(), marked_by: rep });
+      if (!ok) ev.target.disabled = false;
+    } }, "Save mark"),
+    el("button", { class: "btn btn--secondary btn--block", type: "button", onclick: () => form.toggleAttribute("hidden", true) }, "Cancel"));
+  kids.push(el("button", { class: "btn btn--secondary btn--block", type: "button", onclick: () => form.toggleAttribute("hidden") }, row.mark ? "Change mark" : "Mark this merchant"), form);
+  return el("article", { class: "card stack" }, ...kids);
 }
 
 function render() {
-  const repSel = $("#rep");
-  repSel.replaceChildren(el("option", { value: "" }, "Pick your name"),
-    ...state.reps.map((r) => { const o = el("option", { value: r.rep_id }, r.rep_name); if (r.rep_id === rep) o.selected = true; return o; }));
-  $("#mode").textContent = state.mode === "test" ? "Test mode" : "Demo mode";
-  const count = (k) => state.rows.filter((r) => r.kind === k).length;
-  $("#chips").replaceChildren(el("span", { class: "chip" }, state.rows.length + " tasks"), el("span", { class: "chip" }, count("call") + " call"),
-    el("span", { class: "chip" }, count("skip") + " skip"), el("span", { class: "chip" }, count("other") + " other"));
-  $("#list").replaceChildren(...state.rows.map(card));
+  const meta = state.meta || {};
+  // who is using it: with a login there is one admin, who looks at any rep or at everyone
+  $("#account").hidden = !state.auth;
+  if (state.auth && state.me) $("#who").textContent = "Signed in as " + state.me.rep_name;
+  $("#repbox").hidden = example;
+  $("#rep").replaceChildren(el("option", { value: "" }, "Everyone"),
+    ...state.reps.map((r) => { const o = el("option", { value: r.rep_id }, r.rep_name === r.rep_id ? r.rep_id : r.rep_name + " (" + r.rep_id + ")"); if (r.rep_id === rep) o.selected = true; return o; }));
+  $("#mode").textContent = example ? "Example data" : state.mode === "test" ? "Test mode" : "Demo mode";
+  const bits = [state.rows.length + " tasks"];
+  if (meta.updated_at) bits.push("updated " + clock(meta.updated_at));
+  if (meta.team_time) bits.push("team time " + meta.team_time);
+  $("#count").textContent = bits.join(" · ");
+
+  // notices
+  const banners = [];
+  if (example) banners.push(note("info", "These are made-up example tasks. Marks are off."));
+  if (meta.stale) banners.push(note("warn", "The sandbox did not answer, so this list is from " + clock(meta.updated_at) + ". ", el("span", { class: "card__meta" }, meta.error || "")));
+  if (meta.marks_error) banners.push(note("warn", "Marks may be out of date: the sandbox did not answer."));
+  if (meta.skipped) banners.push(note("warn", meta.skipped + " sold-out" + (meta.skipped > 1 ? "s" : "") + " could not be read and " + (meta.skipped > 1 ? "were" : "was") + " left out."));
+  $("#banners").replaceChildren(...banners);
+
+  // example button
+  const eb = $("#exampleBtn");
+  eb.hidden = !(example || (meta.example_available && state.rows.length === 0));
+  eb.textContent = example ? "Back to live data" : "Show example tasks";
+
+  // filter chips
+  const count = (l) => state.rows.filter((r) => r.label === l).length;
+  const present = LABELS.filter((l) => count(l));
+  if (filter !== "All" && !present.includes(filter)) filter = "All";
+  $("#chips").replaceChildren(...(state.rows.length ? [["All", state.rows.length], ...present.map((l) => [l, count(l)])] : []).map(([l, n]) =>
+    el("button", { class: "chip", type: "button", "aria-pressed": String(filter === l), onclick: () => { filter = l; render(); } }, l + " " + n)));
+
+  // list
+  const rows = filter === "All" ? state.rows : state.rows.filter((r) => r.label === filter);
+  let empty = null;
+  if (!state.rows.length) empty = note("info", example ? "No example tasks." : "No sold-outs yet today." + (meta.team_time ? " The team clock reads " + meta.team_time + ". The list fills during the day." : ""));
+  $("#list").replaceChildren(...(empty ? [empty] : rows.map(card)));
+
+  // marks
   $("#marks").replaceChildren(...(state.marks.length ? state.marks.map((m) =>
-    el("div", { class: "card" }, el("div", { class: "name" }, m.merchant_name), el("div", {}, "“" + m.mark + "”: " + m.reason),
-      el("div", { class: "row" }, el("button", { class: "ghost", onclick: () => send("DELETE", "/api/mark?merchant_id=" + encodeURIComponent(m.merchant_id)) }, "Remove mark")))
-    ) : [el("div", { class: "meta" }, "No marks yet.")]));
+    el("div", { class: "card stack" }, el("div", { class: "card__title" }, m.merchant_name), el("div", {}, markNote(m)),
+      example ? null : el("button", { class: "btn btn--secondary btn--block", type: "button", onclick: (ev) => { ev.target.disabled = true; send("DELETE", "/api/mark?merchant_id=" + encodeURIComponent(m.merchant_id)); } }, "Remove mark"))
+    ) : [el("div", { class: "card__meta" }, "No marks yet.")]));
 }
 
 document.body.append(el("datalist", { id: "codes" }, el("option", { value: "no_call" }), el("option", { value: "wrong_number" }), el("option", { value: "call_back_later" })));
-$("#rep").addEventListener("change", (e) => { rep = e.target.value; remembered(rep); load(); });
-load().catch(() => say("Could not load the tasks."));
+$("#rep").addEventListener("change", (e) => { rep = e.target.value; remembered(rep); load(false); });
+$("#refresh").addEventListener("click", () => load(true));
+$("#exampleBtn").addEventListener("click", () => { example = !example; state = null; filter = "All"; load(false); });
+// Coming back to the tab after a minute: fetch again. The server keeps the list for a short time, so this is cheap.
+document.addEventListener("visibilitychange", () => { if (!document.hidden && state && Date.now() - loadedAt > STALE_AFTER_MS) load(false); });
+load(false);
 </script>
 </body>
 </html>

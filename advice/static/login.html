@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in: sold-out desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+</head>
+<body>
+<header class="app-header">
+  <span class="app-header__title">Sold-out desk</span>
+</header>
+<main class="container stack">
+  <div>
+    <h1>Sign in</h1>
+    <p class="muted small">One login for now: admin. After you sign in you pick which rep to look at.</p>
+  </div>
+  <!--NOTICE-->
+  <form class="stack" method="post" action="/login">
+    <label class="field">
+      <span class="field__label">Name</span>
+      <!--USER_FIELD-->
+    </label>
+    <label class="field">
+      <span class="field__label">Password</span>
+      <input class="input" type="password" name="password" id="password" autocomplete="current-password" required>
+    </label>
+    <button class="btn btn--block" type="submit">Sign in</button>
+  </form>
+  <p class="card__meta">This is a demo with made-up merchants. Marks you save go to a test sandbox, not to a real system.</p>
+</main>
+</body>
+</html>

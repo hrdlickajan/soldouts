@@ -1,0 +1,336 @@
+/* ==========================================================================
+   Sold-out desk theme
+   Style inspired by the public Groupon UK websites.
+
+   SOURCES (read on 2026-11-15, values measured with the browser, not guessed)
+   - groupon.co.uk (home page): UI font, text colors, green, price colors,
+     card radius (8px), badge radius (4px), pill search field.
+   - groupon.co.uk/merchant: display font (DM Serif Display), CTA pill button,
+     deep purple tiles (#230f33).
+
+   NOT COPIED: logo, font files, images, icons, page layout.
+   Fonts are open-source Google Fonts. Load them in the HTML, or use next/font:
+     Nunito Sans (wght 400..800) and DM Serif Display (400).
+   The fallback stacks keep the app readable if the fonts do not load.
+
+   VALUE LABELS in the comments:
+     [measured] = read from the Groupon site
+     [derived]  = calculated from a measured value (for example a dark-mode shade)
+     [added]    = not on the Groupon site. Added because this tool needs it.
+   ========================================================================== */
+
+:root {
+  /* ---- Palette ---------------------------------------------------------- */
+  --green-700: #006e1b;  /* [measured] badge text, pressed state */
+  --green-600: #017c1f;  /* [measured] primary action. 5.4:1 on white */
+  --green-500: #00a60e;  /* [measured] merchant-site CTA. 3.2:1 on white. Large text and decoration only */
+  --green-100: #cce8d3;  /* [measured] discount badge background */
+  --green-50:  #e5f3e9;  /* [measured] light green surface */
+
+  --purple-600: #6f389b; /* [measured] current price on cards. 7.7:1 on white */
+  --purple-900: #230f33; /* [measured] merchant-site dark tiles */
+  --purple-50:  #f1eaf6; /* [derived] light purple surface */
+
+  --blue-600: #006bc3;   /* [measured] links, "Change location" */
+  --blue-500: #3860be;   /* [measured] secondary link color */
+  --blue-50:  #e6f1fb;   /* [derived] light blue surface */
+
+  --red-600: #d10d24;    /* [measured] sale and alert red */
+  --red-50:  #fbe8ea;    /* [derived] */
+
+  --amber-700: #8a4b08;  /* [added] warning text. 6.4:1 on white */
+  --amber-50:  #fdf0dc;  /* [added] warning surface */
+
+  --ink-900: #111827;    /* [measured] main text */
+  --ink-700: #4d4d4d;    /* [measured] strong secondary text */
+  --ink-600: #696969;    /* [measured] muted text. 5.5:1 on white */
+  --ink-500: #70747d;    /* [measured] old price, hints */
+
+  --gray-0:   #ffffff;   /* [measured] page */
+  --gray-50:  #f8f8f8;   /* [measured] subtle surface */
+  --gray-100: #edeff2;   /* [measured] chips, dividers */
+  --gray-200: #dee2e6;   /* [measured] borders */
+  --gray-300: #c0c5cf;   /* [measured] strong borders */
+
+  --night-900: #0c121e;  /* [measured] dark page */
+  --night-800: #111827;  /* [measured] dark surface */
+  --night-700: #2e3644;  /* [measured] dark border */
+
+  /* ---- Semantic tokens (use these in components) ------------------------ */
+  --color-bg: var(--gray-0);
+  --color-surface: var(--gray-0);
+  --color-surface-subtle: var(--gray-50);
+  --color-text: var(--ink-900);
+  --color-text-muted: var(--ink-600);
+  --color-text-faint: var(--ink-500);
+  --color-border: var(--gray-200);
+  --color-border-strong: var(--gray-300);
+  --color-primary: var(--green-600);
+  --color-primary-pressed: var(--green-700);
+  --color-on-primary: #ffffff;
+  --color-price: var(--purple-600);
+  --color-link: var(--blue-600);
+  --color-danger: var(--red-600);
+  --color-focus: var(--blue-600);
+
+  /* Action colors: one for each of the four actions in this tool [added] */
+  --action-raise-bg: var(--green-100);   --action-raise-fg: var(--green-700);
+  --action-relaunch-bg: var(--blue-50);  --action-relaunch-fg: #004f94;
+  --action-redirect-bg: var(--purple-50);--action-redirect-fg: var(--purple-600);
+  --action-leave-bg: var(--gray-100);    --action-leave-fg: var(--ink-700);
+
+  /* ---- Type ------------------------------------------------------------- */
+  --font-ui: "Nunito Sans", "Nunito Sans Variable", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-display: "DM Serif Display", Georgia, "Times New Roman", serif;
+
+  --text-xs: 12px;   --lh-xs: 16px;   /* [measured] badges, 12/700 */
+  --text-sm: 14px;   --lh-sm: 20px;   /* [measured] card text, 14/400 */
+  --text-md: 16px;   --lh-md: 24px;   /* [measured] body, 16/24 */
+  --text-lg: 18px;   --lh-lg: 24px;   /* [measured] current price, 18/800 */
+  --text-xl: 24px;   --lh-xl: 29px;   /* [measured] section title, 24/800 */
+  --text-2xl: 28px;  --lh-2xl: 32px;  /* [measured] display numerals */
+  --text-3xl: 36px;  --lh-3xl: 43px;  /* [measured] display heading */
+
+  /* ---- Shape and space -------------------------------------------------- */
+  --radius-sm: 4px;      /* [measured] badges */
+  --radius-md: 8px;      /* [measured] deal cards */
+  --radius-lg: 10px;     /* [measured] merchant tiles */
+  --radius-pill: 9999px; /* [measured] buttons and search field */
+
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px;
+  --space-4: 16px; --space-5: 24px; --space-6: 32px;
+
+  --tap-min: 44px;       /* minimum touch target on a phone */
+  --border-w: 1.6px;     /* [measured] search field border */
+
+  --shadow-card: 0 1px 2px rgba(17, 24, 39, 0.06), 0 1px 3px rgba(17, 24, 39, 0.08); /* [added] */
+
+  /* Badge and highlight colors. They change in dark mode. */
+  --badge-bg: var(--green-100);        --badge-fg: var(--green-700);
+  --badge-warn-bg: var(--amber-50);    --badge-warn-fg: var(--amber-700);
+  --badge-danger-bg: var(--red-50);    --badge-danger-fg: var(--red-600);
+  --badge-info-bg: var(--blue-50);     --badge-info-fg: #004f94;
+  --mark-bg: var(--green-100);         --mark-fg: var(--green-700);
+}
+
+/* ---- Dark mode: [derived] from the measured night colors ---------------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg: var(--night-900);
+    --color-surface: var(--night-800);
+    --color-surface-subtle: #0f1726;
+    --color-text: #f3f4f6;
+    --color-text-muted: #aab2c0;
+    --color-text-faint: #8d95a5;
+    --color-border: var(--night-700);
+    --color-border-strong: #44506a;
+    --color-primary: #2f9e4d;
+    --color-primary-pressed: #258a41;
+    --color-on-primary: #06140a;
+    --color-price: #c9a2ea;
+    --color-link: #6db3f2;
+    --color-danger: #ff6b7a;
+    --color-focus: #6db3f2;
+    --action-raise-bg: #12301b;    --action-raise-fg: #8fdca5;
+    --action-relaunch-bg: #0f2740; --action-relaunch-fg: #8ec5f7;
+    --action-redirect-bg: #2a1a3a; --action-redirect-fg: #d5b5f0;
+    --action-leave-bg: #1f2735;    --action-leave-fg: #c3cad6;
+    --shadow-card: none;
+    --badge-bg: #12301b;        --badge-fg: #8fdca5;
+    --badge-warn-bg: #3a2a10;   --badge-warn-fg: #f2c27a;
+    --badge-danger-bg: #3a1419; --badge-danger-fg: #ff9aa6;
+    --badge-info-bg: #0f2740;   --badge-info-fg: #8ec5f7;
+    --mark-bg: #12301b;         --mark-fg: #8fdca5;
+  }
+}
+:root[data-theme="dark"] {
+  --color-bg: var(--night-900);
+  --color-surface: var(--night-800);
+  --color-surface-subtle: #0f1726;
+  --color-text: #f3f4f6;
+  --color-text-muted: #aab2c0;
+  --color-text-faint: #8d95a5;
+  --color-border: var(--night-700);
+  --color-border-strong: #44506a;
+  --color-primary: #2f9e4d;
+  --color-primary-pressed: #258a41;
+  --color-on-primary: #06140a;
+  --color-price: #c9a2ea;
+  --color-link: #6db3f2;
+  --color-danger: #ff6b7a;
+  --color-focus: #6db3f2;
+  --action-raise-bg: #12301b;    --action-raise-fg: #8fdca5;
+  --action-relaunch-bg: #0f2740; --action-relaunch-fg: #8ec5f7;
+  --action-redirect-bg: #2a1a3a; --action-redirect-fg: #d5b5f0;
+  --action-leave-bg: #1f2735;    --action-leave-fg: #c3cad6;
+  --shadow-card: none;
+  --badge-bg: #12301b;        --badge-fg: #8fdca5;
+  --badge-warn-bg: #3a2a10;   --badge-warn-fg: #f2c27a;
+  --badge-danger-bg: #3a1419; --badge-danger-fg: #ff9aa6;
+  --badge-info-bg: #0f2740;   --badge-info-fg: #8ec5f7;
+  --mark-bg: #12301b;         --mark-fg: #8fdca5;
+}
+
+/* ---- Base --------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  font-size: var(--text-md);
+  line-height: var(--lh-md);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { margin: 0; color: var(--color-text); }
+h1 { font-family: var(--font-display); font-weight: 400; font-size: var(--text-2xl); line-height: var(--lh-2xl); }
+h2 { font-weight: 800; font-size: var(--text-xl); line-height: var(--lh-xl); }
+h3 { font-weight: 800; font-size: var(--text-lg); line-height: var(--lh-lg); }
+p  { margin: 0; }
+a  { color: var(--color-link); font-weight: 700; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+.muted { color: var(--color-text-muted); }
+.small { font-size: var(--text-sm); line-height: var(--lh-sm); }
+
+/* ---- Layout ------------------------------------------------------------- */
+.app-header {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+.app-header__title { font-family: var(--font-display); font-size: var(--text-lg); color: var(--color-primary); }
+
+.container { width: 100%; max-width: 520px; margin: 0 auto; padding: var(--space-4); }
+.stack > * + * { margin-top: var(--space-3); }
+.row { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+.row--between { justify-content: space-between; flex-wrap: nowrap; align-items: flex-start; }
+.row--between > :first-child { flex: 1 1 auto; min-width: 0; }
+
+/* ---- Card --------------------------------------------------------------- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-4);
+}
+.card__title { font-weight: 800; font-size: var(--text-md); line-height: var(--lh-md); }
+.card__meta  { color: var(--color-text-muted); font-size: var(--text-sm); line-height: var(--lh-sm); }
+
+/* ---- Badge, action tag, chip -------------------------------------------- */
+.badge {
+  display: inline-flex; align-items: center;
+  padding: 0 6px; min-height: 16px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs); line-height: var(--lh-xs); font-weight: 700;
+  background: var(--badge-bg); color: var(--badge-fg);
+}
+.badge--warn   { background: var(--badge-warn-bg);   color: var(--badge-warn-fg); }
+.badge--danger { background: var(--badge-danger-bg); color: var(--badge-danger-fg); }
+.badge--info   { background: var(--badge-info-bg);   color: var(--badge-info-fg); }
+
+.action-tag {
+  display: inline-flex; align-items: center; gap: var(--space-1);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm); line-height: var(--lh-sm); font-weight: 800;
+}
+.action-tag--raise    { background: var(--action-raise-bg);    color: var(--action-raise-fg); }
+.action-tag--relaunch { background: var(--action-relaunch-bg); color: var(--action-relaunch-fg); }
+.action-tag--redirect { background: var(--action-redirect-bg); color: var(--action-redirect-fg); }
+.action-tag--leave    { background: var(--action-leave-bg);    color: var(--action-leave-fg); }
+
+.chip {
+  display: inline-flex; align-items: center;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--gray-100); color: var(--color-text);
+  font-size: var(--text-sm); line-height: var(--lh-sm); font-weight: 700;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .chip { background: #1f2735; } }
+:root[data-theme="dark"] .chip { background: #1f2735; }
+
+/* ---- Price and money ---------------------------------------------------- */
+.price-was { color: var(--color-text-faint); font-size: var(--text-sm); text-decoration: line-through; }
+.price-now { color: var(--color-price); font-size: var(--text-lg); line-height: var(--lh-lg); font-weight: 800; }
+.price-green { color: var(--color-primary); font-weight: 800; }
+
+.money-range { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); text-align: center; }
+.money-range__cell { background: var(--color-surface-subtle); border-radius: var(--radius-md); padding: var(--space-2); }
+.money-range__label { font-size: var(--text-xs); line-height: var(--lh-xs); color: var(--color-text-muted); font-weight: 700; }
+.money-range__value { font-size: var(--text-md); font-weight: 800; }
+.money-range__cell--likely .money-range__value { color: var(--color-price); }
+
+/* ---- Evidence quote (flag + verbatim quote from the LLM step) ----------- */
+.quote {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--color-primary);
+  background: var(--color-surface-subtle);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: var(--text-sm); line-height: var(--lh-sm);
+}
+.quote__source { display: block; margin-top: var(--space-1); color: var(--color-text-muted); font-size: var(--text-xs); line-height: var(--lh-xs); }
+.quote mark { background: var(--mark-bg); color: var(--mark-fg); border-radius: 2px; padding: 0 2px; }
+
+/* ---- Buttons ------------------------------------------------------------ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  min-height: var(--tap-min); padding: 10px 23px;
+  border: var(--border-w) solid var(--color-primary);
+  border-radius: var(--radius-pill);
+  background: var(--color-primary); color: var(--color-on-primary);
+  font-family: inherit; font-size: var(--text-md); line-height: var(--lh-md); font-weight: 700;
+  cursor: pointer; text-decoration: none;
+}
+.btn:hover { background: var(--color-primary-pressed); border-color: var(--color-primary-pressed); text-decoration: none; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn--secondary { background: transparent; color: var(--color-primary); }
+.btn--secondary:hover { background: var(--green-50); color: var(--green-700); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn--secondary:hover { background: #12301b; color: #8fdca5; } }
+:root[data-theme="dark"] .btn--secondary:hover { background: #12301b; color: #8fdca5; }
+.btn--block { display: flex; width: 100%; }
+
+/* ---- Form fields -------------------------------------------------------- */
+.field { display: block; }
+.field__label { display: block; margin-bottom: var(--space-1); font-size: var(--text-sm); line-height: var(--lh-sm); font-weight: 700; }
+.field__hint  { margin-top: var(--space-1); color: var(--color-text-muted); font-size: var(--text-xs); line-height: var(--lh-xs); }
+
+.input, .textarea, .select {
+  width: 100%;
+  border: var(--border-w) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface); color: var(--color-text);
+  font-family: inherit; font-size: var(--text-md); line-height: var(--lh-md);
+  padding: 10px 14px; min-height: var(--tap-min);
+}
+.input--pill { border-color: var(--color-primary); border-radius: var(--radius-pill); }
+.textarea { min-height: 96px; resize: vertical; }
+.input:focus, .textarea:focus, .select:focus { outline: 2px solid var(--color-focus); outline-offset: 1px; border-color: var(--color-focus); }
+
+/* ---- Empty and error states --------------------------------------------- */
+.notice { padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); font-size: var(--text-sm); line-height: var(--lh-sm); }
+.notice--info   { background: var(--blue-50);  color: #004f94; }
+.notice--warn   { background: var(--amber-50); color: var(--amber-700); }
+.notice--danger { background: var(--red-50);   color: var(--red-600); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .notice--info   { background: #0f2740; color: #8ec5f7; }
+  :root:not([data-theme="light"]) .notice--warn   { background: #3a2a10; color: #f2c27a; }
+  :root:not([data-theme="light"]) .notice--danger { background: #3a1419; color: #ff9aa6; }
+}
+:root[data-theme="dark"] .notice--info   { background: #0f2740; color: #8ec5f7; }
+:root[data-theme="dark"] .notice--warn   { background: #3a2a10; color: #f2c27a; }
+:root[data-theme="dark"] .notice--danger { background: #3a1419; color: #ff9aa6; }
+
+/* ---- Respect reduced motion --------------------------------------------- */
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }

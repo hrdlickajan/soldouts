@@ -77,6 +77,7 @@ class History:
         for v in self._calls.values():
             v.sort()
         self._call_dates = {m: [c[0] for c in v] for m, v in self._calls.items()}
+        self.has_calls = bool(self._calls)  # False when the call log was not loaded: failed attempts are then unknown
 
         self.refunds = defaultdict(list)  # (merchant, deal) -> [(date, amount)]
         for r in t["refunds"]:

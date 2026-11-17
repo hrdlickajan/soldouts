@@ -19,7 +19,7 @@ STATUSES = {
     "check_capacity_first": ("other", "Other", "Notes say to check capacity first."),
     "high_value": ("call", "Call first", "High value: the best case is in the top fifth."),
     "auto_top_up_soon": ("skip", "Skip", "An automatic top-up is active and the best case is small. The deal should restock soon."),
-    "worth_a_call": ("call", "Normal", "Worth a call."),
+    "worth_a_call": ("call", "Call later", "Worth a call."),
 }
 REASONS = {k: v[2] for k, v in STATUSES.items()}
 TOUCHED = ("high_value", "auto_top_up_soon")  # the new routing changes how these are handled
@@ -30,7 +30,7 @@ class Advice:
     task: Task
     status: str
     kind: str            # call, skip or other
-    label: str           # Call first, Normal, Skip or Other
+    label: str           # Call first, Call later, Skip or Other
     reason: str
     best_case: float     # GBP, None when missing
     best_case_source: str
@@ -84,10 +84,14 @@ class Engine:
                     unknown.append("callback promised")
             fails = task.failed_attempts
             if fails is None and not callback and not mark:
-                fails = h.failed_attempts_proxy(task.merchant_id, task.sold_out_date,
-                                                cfg["failed_attempts_proxy_window_days"], cfg["connected_seconds"],
-                                                cfg["no_answer_subject"])
-                unknown.append("failed attempts estimated")
+                if h.has_calls:
+                    fails = h.failed_attempts_proxy(task.merchant_id, task.sold_out_date,
+                                                    cfg["failed_attempts_proxy_window_days"], cfg["connected_seconds"],
+                                                    cfg["no_answer_subject"])
+                    unknown.append("failed attempts estimated")
+                else:  # no call log loaded: do not pretend to estimate
+                    fails = 0
+                    unknown.append("failed attempts")
             if callback:
                 status = "callback_promised"
             elif mark:

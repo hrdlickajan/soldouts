@@ -121,7 +121,7 @@ Maintainers
 | 7 | `check_capacity_first` | other | Other | note finding of that type (optional module) |
 | 8 | `high_value` | call | Call first | best case ≥ top-fifth cut point |
 | 9 | `auto_top_up_soon` | skip | Skip | schedule active and best case < dial |
-| 10 | `worth_a_call` | call | Normal | everything else |
+| 10 | `worth_a_call` | call | Call later | everything else |
 
 - Every status has one fixed plain-language reason template. Tests check the exact text.
 - Tasks with no active schedule are never `auto_top_up_soon`.

@@ -44,6 +44,7 @@
     }
   },
   "tool_mode": "demo",
+  "live_cache_seconds": 30,
   "launch_date": "",
   "accrual_weeks": 8,
   "followup_days": 30,

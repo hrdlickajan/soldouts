@@ -163,6 +163,7 @@ class PageTest(unittest.TestCase):
             self.assertLessEqual(int(px), 320)
         self.assertIn("textContent", html)                    # notes and quotes are never put in as HTML
         self.assertNotIn("innerHTML", html)
+        self.assertIn('href="/theme.css"', html)              # the look comes from the style sheet
 
     def test_server_serves_the_page_and_the_json(self):
         tool = make_tool()
@@ -179,6 +180,9 @@ class PageTest(unittest.TestCase):
             status, body = call("GET", "/")
             self.assertEqual(status, 200)
             self.assertIn("viewport", body)
+            status, body = call("GET", "/theme.css")
+            self.assertEqual(status, 200)
+            self.assertIn("--color-primary", body)
             status, body = call("GET", "/api/state")
             self.assertEqual(len(json.loads(body)["rows"]), 28)
             mark = {"merchant_id": "M90001", "mark": "no_call", "reason": "r", "marked_by": "R10"}

@@ -20,6 +20,29 @@ class AdapterTest(unittest.TestCase):
                    "sold_out_date": "2026-10-25", "value_30d_gbp": "52.11", "callback_promised": "0",
                    "do_not_contact": "0", "failed_attempts": "0"}
 
+    # The live feed (GET /soldouts/today), as the OpenAPI file in the sandbox describes it (Go 1, 2026-11-11).
+    # It has no sold_out_date. It has sold_out_at. It carries the merchant name, band and do-not-contact itself.
+    live_row = {"sold_out_id": "SO-1", "restock_task_id": "RT-1", "deal_id": "D10001-1", "deal_name": "60-minute facial",
+                "merchant_id": "M10001", "merchant_name": "Bright Skin & Spa", "category": "Health & Beauty",
+                "region": "North West", "city": "Manchester", "size_band": "A", "rep_id": "R10", "rep_name": "Rep Ten",
+                "do_not_contact": False, "cap": 60, "sold_out_at": "2026-10-25T09:14:00.000Z",
+                "team_time": "09:14", "world_day": "d2", "posted_in_channel": True}
+
+    def test_live_feed_row_gives_the_same_record(self):
+        live = to_task(self.live_row)  # no merchant lookup needed: the row carries what the engine needs
+        self.assertEqual(live, to_task(self.csv_row, MERCHANTS))
+        self.assertEqual(live.sold_out_date, date(2026, 10, 25))
+        self.assertEqual((live.merchant_name, live.size_band, live.do_not_contact), ("Bright Skin & Spa", "A", False))
+        self.assertEqual(live.task_id, "RT-1")  # the task the rep sees
+        self.assertEqual((live.callback_promised, live.failed_attempts, live.value_30d_gbp), (None, None, None))
+
+    def test_live_feed_date_is_the_day_on_the_timestamp(self):
+        for stamp in ("2026-10-25T00:05:00Z", "2026-10-25T23:59:59.999Z", "2026-10-25T23:30:00+01:00"):
+            self.assertEqual(to_task(dict(self.live_row, sold_out_at=stamp)).sold_out_date, date(2026, 10, 25))
+
+    def test_live_feed_do_not_contact_true_is_kept(self):
+        self.assertIs(to_task(dict(self.live_row, do_not_contact=True)).do_not_contact, True)
+
     def test_three_shapes_give_equal_records(self):
         a = to_task(self.csv_row, MERCHANTS)
         b = to_task(self.api_row, MERCHANTS)
